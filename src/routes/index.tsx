@@ -80,9 +80,17 @@ function Navbar() {
   );
 }
 
-function Hero() {
-  const [city, setCity] = useState("");
-  const [service, setService] = useState("");
+interface HeroProps {
+  city: string;
+  setCity: (v: string) => void;
+  service: string;
+  setService: (v: string) => void;
+  onSearch: () => void;
+  loading: boolean;
+  providerCount: number | null;
+}
+
+function Hero({ city, setCity, service, setService, onSearch, loading, providerCount }: HeroProps) {
   return (
     <section
       id="top"
@@ -92,7 +100,9 @@ function Hero() {
       <div className="mx-auto max-w-6xl px-6 pt-20 pb-24 text-center md:pt-28 md:pb-32">
         <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
-          AI-powered local recommendations
+          {providerCount !== null
+            ? `${providerCount} Serviceanbieter verfügbar`
+            : "AI-powered local recommendations"}
         </div>
         <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl">
           Not the best plumber in Brussels.{" "}
@@ -108,7 +118,7 @@ function Hero() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
+            onSearch();
           }}
           className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 rounded-2xl border border-border/70 bg-card p-3 shadow-[var(--shadow-soft)] md:flex-row md:items-center"
         >
@@ -127,19 +137,128 @@ function Hero() {
             <Input
               value={service}
               onChange={(e) => setService(e.target.value)}
-              placeholder="Service type (e.g. Plumber)"
+              placeholder="Service type (e.g. plumber, electrician)"
               className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
             />
           </div>
-          <Button type="submit" size="lg" className="rounded-xl">
-            Find my match
-            <ArrowRight className="ml-1 h-4 w-4" />
+          <Button type="submit" size="lg" className="rounded-xl" disabled={loading}>
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Find my match
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </>
+            )}
           </Button>
         </form>
 
         <p className="mt-4 text-xs text-muted-foreground">
           Free during beta · No credit card required
         </p>
+      </div>
+    </section>
+  );
+}
+
+function SearchResults({
+  loading,
+  error,
+  results,
+  hasSearched,
+  city,
+  service,
+}: {
+  loading: boolean;
+  error: string | null;
+  results: ApiContact[];
+  hasSearched: boolean;
+  city: string;
+  service: string;
+}) {
+  if (!hasSearched && !loading) return null;
+  return (
+    <section id="results" className="border-t border-border bg-muted/30 py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-8 text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            Ergebnisse
+          </span>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+            {loading
+              ? "Suche läuft…"
+              : error
+                ? "Keine Verbindung zum Backend"
+                : `${results.length} Treffer${
+                    city || service ? ` für ${[service, city].filter(Boolean).join(" in ")}` : ""
+                  }`}
+          </h2>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            Lade passende Anbieter…
+          </div>
+        ) : error ? (
+          <div className="mx-auto flex max-w-md items-center justify-center gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </div>
+        ) : results.length === 0 ? (
+          <p className="text-center text-sm text-muted-foreground">
+            Keine Anbieter gefunden. Versuche eine andere Stadt oder Serviceart.
+          </p>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {results.map((c) => (
+              <div
+                key={c.id}
+                className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/40"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="font-semibold text-foreground">
+                      {c.firstName} {c.lastName}
+                    </h3>
+                    {c.position && (
+                      <p className="text-xs text-muted-foreground">{c.position}</p>
+                    )}
+                  </div>
+                  <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                    {primaryService(c)}
+                  </span>
+                </div>
+                {c.organization?.name && (
+                  <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                    <Building2 className="h-3.5 w-3.5" />
+                    {c.organization.name}
+                    {c.organization.city ? ` · ${c.organization.city}` : ""}
+                  </div>
+                )}
+                {c.notes && (
+                  <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{c.notes}</p>
+                )}
+                <div className="mt-4 flex flex-col gap-1 text-xs">
+                  <a
+                    href={`mailto:${c.email}`}
+                    className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <Mail className="h-3.5 w-3.5" />
+                    {c.email}
+                  </a>
+                  <a
+                    href={`tel:${c.phone.replace(/\s/g, "")}`}
+                    className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <Phone className="h-3.5 w-3.5" />
+                    {c.phone}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
