@@ -89,18 +89,26 @@ function CrmPage() {
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-12">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground">
-            <Users className="h-5 w-5" />
+        <div className="mb-8 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+                Serviceanbieter
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Übersicht aller Kontakte und ihrer Verfügbarkeit.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              Serviceanbieter
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Übersicht aller Kontakte und ihrer Verfügbarkeit.
-            </p>
-          </div>
+          <Button asChild size="sm" className="shrink-0">
+            <Link to="/crm/new-contact">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Neuer Kontakt</span>
+            </Link>
+          </Button>
         </div>
 
         <Card className="overflow-hidden border-border bg-card shadow-[var(--shadow-soft)]">
