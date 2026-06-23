@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,79 +10,35 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Users, Mail, Phone, ArrowLeft } from "lucide-react";
+import { Users, Mail, Phone, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { fetchContacts, primaryService, type ApiContact } from "@/lib/matchly-api";
 
 export const Route = createFileRoute("/crm")({
   head: () => ({
     meta: [
       { title: "CRM — Matchly" },
       { name: "description", content: "Manage your service provider contacts on Matchly." },
-      { property: "og:title", content: "CRM — Matchly" },
-      { property: "og:description", content: "Service provider contact management for Matchly." },
     ],
   }),
   component: CrmPage,
 });
 
-type ContactStatus = "Aktiv" | "Inaktiv";
-
-interface ServiceContact {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  serviceType: string;
-  status: ContactStatus;
-}
-
-const contacts: ServiceContact[] = [
-  {
-    id: "1",
-    firstName: "Luc",
-    lastName: "Dupont",
-    email: "luc.dupont@example.com",
-    phone: "+32 471 12 34 56",
-    serviceType: "Klempner",
-    status: "Aktiv",
-  },
-  {
-    id: "2",
-    firstName: "Elise",
-    lastName: "Vermeulen",
-    email: "elise.vermeulen@example.com",
-    phone: "+32 472 23 45 67",
-    serviceType: "Elektriker",
-    status: "Aktiv",
-  },
-  {
-    id: "3",
-    firstName: "Mauro",
-    lastName: "De Smet",
-    email: "mauro.desmet@example.com",
-    phone: "+32 473 34 56 78",
-    serviceType: "Heizung",
-    status: "Inaktiv",
-  },
-];
-
-function StatusBadge({ status }: { status: ContactStatus }) {
-  const isActive = status === "Aktiv";
+function StatusBadge({ active }: { active: boolean }) {
   return (
     <Badge
       variant="secondary"
       className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-        isActive
+        active
           ? "bg-primary/10 text-primary hover:bg-primary/15"
           : "bg-muted text-muted-foreground hover:bg-muted/80"
       }`}
     >
       <span
         className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${
-          isActive ? "bg-primary" : "bg-muted-foreground/60"
+          active ? "bg-primary" : "bg-muted-foreground/60"
         }`}
       />
-      {status}
+      {active ? "Aktiv" : "Inaktiv"}
     </Badge>
   );
 }
@@ -98,6 +55,23 @@ function ServiceBadge({ type }: { type: string }) {
 }
 
 function CrmPage() {
+  const [contacts, setContacts] = useState<ApiContact[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    setLoading(true);
+    setError(null);
+    fetchContacts(ctrl.signal)
+      .then((data) => setContacts(data))
+      .catch((e) => {
+        if (e.name !== "AbortError") setError("Backend nicht erreichbar. Bitte später erneut versuchen.");
+      })
+      .finally(() => setLoading(false));
+    return () => ctrl.abort();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -132,57 +106,76 @@ function CrmPage() {
           <CardHeader className="border-b border-border bg-muted/30 px-6 py-5">
             <CardTitle className="text-base font-semibold">Kontaktliste</CardTitle>
             <CardDescription className="text-sm">
-              {contacts.length} Kontakte gesamt
+              {loading ? "Lade Kontakte…" : `${contacts.length} Kontakte gesamt`}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[200px] px-6 py-4 font-medium text-foreground">
-                    Name
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-medium text-foreground">Kontakt</TableHead>
-                  <TableHead className="px-6 py-4 font-medium text-foreground">Service</TableHead>
-                  <TableHead className="px-6 py-4 font-medium text-foreground">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {contacts.map((contact) => (
-                  <TableRow key={contact.id} className="group">
-                    <TableCell className="px-6 py-4">
-                      <div className="font-medium text-foreground">
-                        {contact.firstName} {contact.lastName}
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <div className="flex flex-col gap-1 text-sm">
-                        <a
-                          href={`mailto:${contact.email}`}
-                          className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
-                        >
-                          <Mail className="h-3.5 w-3.5" />
-                          {contact.email}
-                        </a>
-                        <a
-                          href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                          className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
-                        >
-                          <Phone className="h-3.5 w-3.5" />
-                          {contact.phone}
-                        </a>
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <ServiceBadge type={contact.serviceType} />
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <StatusBadge status={contact.status} />
-                    </TableCell>
+            {loading ? (
+              <div className="flex items-center justify-center gap-2 px-6 py-16 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                Lade Kontakte…
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center gap-2 px-6 py-16 text-sm text-destructive">
+                <AlertCircle className="h-4 w-4" />
+                {error}
+              </div>
+            ) : contacts.length === 0 ? (
+              <div className="px-6 py-16 text-center text-sm text-muted-foreground">
+                Keine Kontakte gefunden.
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[200px] px-6 py-4 font-medium text-foreground">Name</TableHead>
+                    <TableHead className="px-6 py-4 font-medium text-foreground">Kontakt</TableHead>
+                    <TableHead className="px-6 py-4 font-medium text-foreground">Service</TableHead>
+                    <TableHead className="px-6 py-4 font-medium text-foreground">Status</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {contacts.map((contact) => (
+                    <TableRow key={contact.id} className="group">
+                      <TableCell className="px-6 py-4">
+                        <div className="font-medium text-foreground">
+                          {contact.firstName} {contact.lastName}
+                        </div>
+                        {contact.organization?.name && (
+                          <div className="text-xs text-muted-foreground">
+                            {contact.organization.name}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        <div className="flex flex-col gap-1 text-sm">
+                          <a
+                            href={`mailto:${contact.email}`}
+                            className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                          >
+                            <Mail className="h-3.5 w-3.5" />
+                            {contact.email}
+                          </a>
+                          <a
+                            href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                            className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                          >
+                            <Phone className="h-3.5 w-3.5" />
+                            {contact.phone}
+                          </a>
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        <ServiceBadge type={primaryService(contact)} />
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        <StatusBadge active={contact.status === "active"} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </main>
