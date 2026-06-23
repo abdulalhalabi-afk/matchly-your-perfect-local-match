@@ -629,11 +629,62 @@ function Footer() {
 }
 
 function Landing() {
+  const [city, setCity] = useState("");
+  const [service, setService] = useState("");
+  const [results, setResults] = useState<ApiContact[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [providerCount, setProviderCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    fetchContacts(ctrl.signal)
+      .then((data) => setProviderCount(data.length))
+      .catch(() => {});
+    return () => ctrl.abort();
+  }, []);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    setError(null);
+    setHasSearched(true);
+    try {
+      const all = await fetchContacts();
+      setProviderCount(all.length);
+      setResults(all.filter((c) => matchesSearch(c, city, service)));
+      setTimeout(() => {
+        document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
+      }, 50);
+    } catch {
+      setError("Backend nicht erreichbar. Bitte später erneut versuchen.");
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main>
-        <Hero />
+        <Hero
+          city={city}
+          setCity={setCity}
+          service={service}
+          setService={setService}
+          onSearch={handleSearch}
+          loading={loading}
+          providerCount={providerCount}
+        />
+        <SearchResults
+          loading={loading}
+          error={error}
+          results={results}
+          hasSearched={hasSearched}
+          city={city}
+          service={service}
+        />
         <Problem />
         <HowItWorks />
         <Demo />
