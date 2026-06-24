@@ -609,7 +609,64 @@ function Waitlist() {
   );
 }
 
+function ProviderCta() {
+  return (
+    <section id="providers" className="border-t border-border bg-background py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-10 shadow-[var(--shadow-soft)] md:p-14">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-60"
+            style={{ background: "var(--gradient-hero)" }}
+            aria-hidden
+          />
+          <div className="relative grid items-center gap-10 md:grid-cols-[1.2fr_1fr]">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                Für Profis
+              </span>
+              <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                Bist du Serviceanbieter?
+              </h2>
+              <p className="mt-4 max-w-md text-muted-foreground">
+                Werde Teil von Matchly und erreiche Familien, die genau deinen
+                Service suchen — kostenlos und unverbindlich.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button asChild size="lg" className="rounded-xl">
+                  <Link to="/register">
+                    Jetzt registrieren
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <ul className="space-y-3 text-sm">
+              {[
+                "Passende Anfragen aus deiner Region",
+                "Kein Provisionsmodell — du behältst alles",
+                "Eintrag in unter 2 Minuten",
+              ].map((t) => (
+                <li
+                  key={t}
+                  className="flex items-start gap-3 rounded-xl border border-border bg-card/80 p-4 backdrop-blur"
+                >
+                  <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                    <Check className="h-3 w-3" />
+                  </span>
+                  <span className="text-foreground">{t}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
+
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
