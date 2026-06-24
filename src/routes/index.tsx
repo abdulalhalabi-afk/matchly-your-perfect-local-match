@@ -100,6 +100,7 @@ interface HeroProps {
 }
 
 function Hero({ city, setCity, service, setService, onSearch, loading, providerCount }: HeroProps) {
+  const { t } = useI18n();
   return (
     <section
       id="top"
@@ -110,21 +111,20 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
         <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           {providerCount !== null
-            ? `${providerCount} Serviceanbieter verfügbar`
-            : "AI-powered local recommendations"}
+            ? t("hero.badge.providers", { n: providerCount })
+            : t("hero.badge.ai")}
         </div>
         <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl whitespace-pre-line">
-          Not the best plumber in Brussels.{"\u00a0"}
+          {t("hero.title.line1")}{"\u00a0"}
           {"\n"}
           <span className="bg-[var(--gradient-primary)] bg-clip-text text-transparent">
-            The best plumber for YOU
+            {t("hero.title.line2")}
           </span>
           {"\n\n"}
-          The best plumber for you.
+          {t("hero.title.line3")}
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-          Our AI agent learns your preferences and finds local services that actually
-          match your family's needs.
+          {t("hero.subtitle")}
         </p>
 
         <form
@@ -139,7 +139,7 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
             <Input
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              placeholder="City (e.g. Brussels)"
+              placeholder={t("hero.city")}
               className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -149,7 +149,7 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
             <Input
               value={service}
               onChange={(e) => setService(e.target.value)}
-              placeholder="Service type (e.g. plumber, electrician)"
+              placeholder={t("hero.service")}
               className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -158,7 +158,7 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                Find my match
+                {t("hero.cta")}
                 <ArrowRight className="ml-1 h-4 w-4" />
               </>
             )}
@@ -166,12 +166,13 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
         </form>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Free during beta · No credit card required
+          {t("hero.note")}
         </p>
       </div>
     </section>
   );
 }
+
 
 function SearchResults({
   loading,
