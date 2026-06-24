@@ -104,11 +104,14 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
             ? `${providerCount} Serviceanbieter verfügbar`
             : "AI-powered local recommendations"}
         </div>
-        <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl">
-          Not the best plumber in Brussels.{" "}
+        <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl whitespace-pre-line">
+          Not the best plumber in Brussels.{"\u00a0"}
+          {"\n"}
           <span className="bg-[var(--gradient-primary)] bg-clip-text text-transparent">
-            The best plumber for you.
+            The best plumber for YOU
           </span>
+          {"\n\n"}
+          tThe best plumber for you.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
           Our AI agent learns your preferences and finds local services that actually
