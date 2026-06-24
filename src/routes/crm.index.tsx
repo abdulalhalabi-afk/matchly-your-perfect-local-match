@@ -187,8 +187,10 @@ function CrmPage() {
                     <TableHead className="px-6 py-4 font-medium text-foreground">Kontakt</TableHead>
                     <TableHead className="px-6 py-4 font-medium text-foreground">Service</TableHead>
                     <TableHead className="px-6 py-4 font-medium text-foreground">Status</TableHead>
+                    <TableHead className="w-[60px] px-6 py-4" />
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {contacts.map((contact) => (
                     <TableRow key={contact.id} className="group">
