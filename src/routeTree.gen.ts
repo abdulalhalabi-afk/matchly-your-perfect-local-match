@@ -9,64 +9,58 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CrmRouteImport } from './routes/crm'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CrmIndexRouteImport } from './routes/crm.index'
 import { Route as CrmNewContactRouteImport } from './routes/crm.new-contact'
 
-const CrmRoute = CrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CrmIndexRoute = CrmIndexRouteImport.update({
+  id: '/crm/',
+  path: '/crm/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CrmNewContactRoute = CrmNewContactRouteImport.update({
-  id: '/new-contact',
-  path: '/new-contact',
-  getParentRoute: () => CrmRoute,
+  id: '/crm/new-contact',
+  path: '/crm/new-contact',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm/': typeof CrmIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm': typeof CrmIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm/': typeof CrmIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/crm' | '/crm/new-contact'
+  fullPaths: '/' | '/crm/new-contact' | '/crm/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crm' | '/crm/new-contact'
-  id: '__root__' | '/' | '/crm' | '/crm/new-contact'
+  to: '/' | '/crm/new-contact' | '/crm'
+  id: '__root__' | '/' | '/crm/new-contact' | '/crm/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CrmRoute: typeof CrmRouteWithChildren
+  CrmNewContactRoute: typeof CrmNewContactRoute
+  CrmIndexRoute: typeof CrmIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/crm': {
-      id: '/crm'
-      path: '/crm'
-      fullPath: '/crm'
-      preLoaderRoute: typeof CrmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -74,29 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crm/': {
+      id: '/crm/'
+      path: '/crm'
+      fullPath: '/crm/'
+      preLoaderRoute: typeof CrmIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/crm/new-contact': {
       id: '/crm/new-contact'
-      path: '/new-contact'
+      path: '/crm/new-contact'
       fullPath: '/crm/new-contact'
       preLoaderRoute: typeof CrmNewContactRouteImport
-      parentRoute: typeof CrmRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface CrmRouteChildren {
-  CrmNewContactRoute: typeof CrmNewContactRoute
-}
-
-const CrmRouteChildren: CrmRouteChildren = {
-  CrmNewContactRoute: CrmNewContactRoute,
-}
-
-const CrmRouteWithChildren = CrmRoute._addFileChildren(CrmRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CrmRoute: CrmRouteWithChildren,
+  CrmNewContactRoute: CrmNewContactRoute,
+  CrmIndexRoute: CrmIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

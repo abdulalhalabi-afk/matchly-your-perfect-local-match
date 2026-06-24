@@ -14,7 +14,7 @@ import { Users, Mail, Phone, ArrowLeft, Loader2, AlertCircle, Plus } from "lucid
 import { Button } from "@/components/ui/button";
 import { fetchContacts, primaryService, type ApiContact } from "@/lib/matchly-api";
 
-export const Route = createFileRoute("/crm")({
+export const Route = createFileRoute("/crm/")({
   head: () => ({
     meta: [
       { title: "CRM — Matchly" },
