@@ -749,7 +749,9 @@ function Landing() {
         <HowItWorks />
         <Demo />
         <UseCases />
+        <ProviderCta />
         <Waitlist />
+
       </main>
       <Footer />
     </div>
