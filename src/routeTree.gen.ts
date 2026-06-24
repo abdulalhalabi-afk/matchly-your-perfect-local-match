@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CrmRouteImport } from './routes/crm'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CrmIndexRouteImport } from './routes/crm.index'
 import { Route as CrmNewContactRouteImport } from './routes/crm.new-contact'
 
 const CrmRoute = CrmRouteImport.update({
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CrmIndexRoute = CrmIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CrmRoute,
+} as any)
 const CrmNewContactRoute = CrmNewContactRouteImport.update({
   id: '/new-contact',
   path: '/new-contact',
@@ -33,24 +39,26 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm/': typeof CrmIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm': typeof CrmIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/crm': typeof CrmRouteWithChildren
   '/crm/new-contact': typeof CrmNewContactRoute
+  '/crm/': typeof CrmIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/crm' | '/crm/new-contact'
+  fullPaths: '/' | '/crm' | '/crm/new-contact' | '/crm/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crm' | '/crm/new-contact'
-  id: '__root__' | '/' | '/crm' | '/crm/new-contact'
+  to: '/' | '/crm/new-contact' | '/crm'
+  id: '__root__' | '/' | '/crm' | '/crm/new-contact' | '/crm/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -74,6 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crm/': {
+      id: '/crm/'
+      path: '/'
+      fullPath: '/crm/'
+      preLoaderRoute: typeof CrmIndexRouteImport
+      parentRoute: typeof CrmRoute
+    }
     '/crm/new-contact': {
       id: '/crm/new-contact'
       path: '/new-contact'
@@ -86,10 +101,12 @@ declare module '@tanstack/react-router' {
 
 interface CrmRouteChildren {
   CrmNewContactRoute: typeof CrmNewContactRoute
+  CrmIndexRoute: typeof CrmIndexRoute
 }
 
 const CrmRouteChildren: CrmRouteChildren = {
   CrmNewContactRoute: CrmNewContactRoute,
+  CrmIndexRoute: CrmIndexRoute,
 }
 
 const CrmRouteWithChildren = CrmRoute._addFileChildren(CrmRouteChildren)
