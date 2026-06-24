@@ -80,6 +80,8 @@ function CrmPage() {
   const [contacts, setContacts] = useState<ApiContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<ApiContact | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -93,6 +95,26 @@ function CrmPage() {
       .finally(() => setLoading(false));
     return () => ctrl.abort();
   }, []);
+
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`${MATCHLY_API_BASE}/api/contacts/${pendingDelete.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok && res.status !== 204) throw new Error(`API ${res.status}`);
+      setContacts((cur) => cur.filter((c) => c.id !== pendingDelete.id));
+      toast.success("Kontakt gelöscht");
+      setPendingDelete(null);
+    } catch (e) {
+      console.error(e);
+      toast.error("Löschen fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
 
 
 
