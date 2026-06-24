@@ -67,22 +67,27 @@ function Logo() {
 }
 
 function Navbar() {
+  const { t } = useI18n();
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-6">
         <Logo />
         <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-          <a href="#how" className="transition-colors hover:text-foreground">How it works</a>
-          <a href="#use-cases" className="transition-colors hover:text-foreground">Use cases</a>
-          <a href="#waitlist" className="transition-colors hover:text-foreground">Join waitlist</a>
+          <a href="#how" className="transition-colors hover:text-foreground">{t("nav.how")}</a>
+          <a href="#use-cases" className="transition-colors hover:text-foreground">{t("nav.useCases")}</a>
+          <a href="#waitlist" className="transition-colors hover:text-foreground">{t("nav.waitlist")}</a>
         </nav>
-        <Button asChild size="sm" className="rounded-full px-4">
-          <a href="#demo">Try the demo</a>
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <Button asChild size="sm" className="hidden rounded-full px-4 sm:inline-flex">
+            <a href="#demo">{t("nav.tryDemo")}</a>
+          </Button>
+        </div>
       </div>
     </header>
   );
 }
+
 
 interface HeroProps {
   city: string;
