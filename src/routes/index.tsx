@@ -189,29 +189,31 @@ function SearchResults({
   city: string;
   service: string;
 }) {
+  const { t } = useI18n();
   if (!hasSearched && !loading) return null;
+  const q = [service, city].filter(Boolean).join(" / ");
   return (
     <section id="results" className="border-t border-border bg-muted/30 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-8 text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-            Ergebnisse
+            {t("results.label")}
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
             {loading
-              ? "Suche läuft…"
+              ? t("results.searching")
               : error
-                ? "Keine Verbindung zum Backend"
-                : `${results.length} Treffer${
-                    city || service ? ` für ${[service, city].filter(Boolean).join(" in ")}` : ""
-                  }`}
+                ? t("results.noBackend")
+                : q
+                  ? t("results.countFor", { n: results.length, q })
+                  : t("results.count", { n: results.length })}
           </h2>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin text-primary" />
-            Lade passende Anbieter…
+            {t("results.loading")}
           </div>
         ) : error ? (
           <div className="mx-auto flex max-w-md items-center justify-center gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
@@ -220,9 +222,10 @@ function SearchResults({
           </div>
         ) : results.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground">
-            Keine Anbieter gefunden. Versuche eine andere Stadt oder Serviceart.
+            {t("results.empty")}
           </p>
         ) : (
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {results.map((c) => (
               <div
