@@ -228,7 +228,19 @@ function CrmPage() {
                       <TableCell className="px-6 py-4">
                         <StatusBadge active={contact.status === "active"} />
                       </TableCell>
+                      <TableCell className="px-2 py-4 text-right">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`${contact.firstName} ${contact.lastName} löschen`}
+                          onClick={() => setPendingDelete(contact)}
+                          className="h-8 w-8 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
+
                   ))}
                 </TableBody>
               </Table>
