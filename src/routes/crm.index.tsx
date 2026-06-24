@@ -10,9 +10,30 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Users, Mail, Phone, ArrowLeft, Loader2, AlertCircle, Plus } from "lucide-react";
+import {
+  Users,
+  Mail,
+  Phone,
+  ArrowLeft,
+  Loader2,
+  AlertCircle,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchContacts, primaryService, type ApiContact } from "@/lib/matchly-api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { fetchContacts, primaryService, MATCHLY_API_BASE, type ApiContact } from "@/lib/matchly-api";
+
 
 export const Route = createFileRoute("/crm/")({
   head: () => ({
