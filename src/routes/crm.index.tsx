@@ -17,8 +17,8 @@ import { fetchContacts, primaryService, type ApiContact } from "@/lib/matchly-ap
 export const Route = createFileRoute("/crm/")({
   head: () => ({
     meta: [
-      { title: "CRM — Matchly" },
-      { name: "description", content: "Manage your service provider contacts on Matchly." },
+      { title: "CRM — Nearfix" },
+      { name: "description", content: "Manage your service provider contacts on Nearfix." },
     ],
   }),
   component: CrmPage,
@@ -87,7 +87,7 @@ function CrmPage() {
             <ArrowLeft className="h-4 w-4" />
             Zurück zur Startseite
           </Link>
-          <span className="text-sm font-semibold text-foreground">Matchly CRM</span>
+          <span className="text-sm font-semibold text-foreground">Nearfix CRM</span>
         </div>
       </header>
 

@@ -25,8 +25,8 @@ import { MATCHLY_API_BASE } from "@/lib/matchly-api";
 export const Route = createFileRoute("/crm/new-contact")({
   head: () => ({
     meta: [
-      { title: "Neuer Kontakt — Matchly CRM" },
-      { name: "description", content: "Neuen Serviceanbieter zu Matchly hinzufügen." },
+      { title: "Neuer Kontakt — Nearfix CRM" },
+      { name: "description", content: "Neuen Serviceanbieter zu Nearfix hinzufügen." },
     ],
   }),
   component: NewContactPage,
@@ -95,7 +95,7 @@ function NewContactPage() {
             <ArrowLeft className="h-4 w-4" />
             Zurück zum CRM
           </Link>
-          <span className="text-sm font-semibold text-foreground">Matchly CRM</span>
+          <span className="text-sm font-semibold text-foreground">Nearfix CRM</span>
         </div>
       </header>
 
@@ -109,7 +109,7 @@ function NewContactPage() {
               Neuer Serviceanbieter
             </h1>
             <p className="text-sm text-muted-foreground">
-              Füge einen neuen Kontakt zur Matchly-Datenbank hinzu.
+              Füge einen neuen Kontakt zur Nearfix-Datenbank hinzu.
             </p>
           </div>
         </div>

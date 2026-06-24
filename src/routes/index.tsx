@@ -34,13 +34,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Matchly — The best local services for your family" },
+      { title: "Nearfix — The best local services for your family" },
       {
         name: "description",
         content:
-          "Matchly is an AI agent that learns your preferences and recommends local service providers that actually match your family's needs.",
+          "Nearfix is an AI agent that learns your preferences and recommends local service providers that actually match your family's needs.",
       },
-      { property: "og:title", content: "Matchly — Local services that actually fit you" },
+      { property: "og:title", content: "Nearfix — Local services that actually fit you" },
       {
         property: "og:description",
         content:
@@ -57,7 +57,7 @@ function Logo() {
       <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-elegant)]">
         <Sparkles className="h-4 w-4" />
       </span>
-      <span className="text-lg tracking-tight">Matchly</span>
+      <span className="text-lg tracking-tight">Nearfix</span>
     </a>
   );
 }
@@ -412,7 +412,7 @@ function Demo() {
         <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:col-span-2">
           <div className="mb-5 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <MessageSquare className="h-4 w-4 text-primary" />
-            Matchly assistant
+            Nearfix assistant
           </div>
 
           <div className="space-y-4">
@@ -573,7 +573,7 @@ function Waitlist() {
           Limited beta
         </div>
         <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Be the first to try Matchly.
+          Be the first to try Nearfix.
         </h2>
         <p className="mt-3 text-background/70">
           Join the waitlist — we're rolling out city by city.
@@ -629,7 +629,7 @@ function ProviderCta() {
                 Bist du Serviceanbieter?
               </h2>
               <p className="mt-4 max-w-md text-muted-foreground">
-                Werde Teil von Matchly und erreiche Familien, die genau deinen
+                Werde Teil von Nearfix und erreiche Familien, die genau deinen
                 Service suchen — kostenlos und unverbindlich.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
@@ -682,7 +682,7 @@ function Footer() {
         </span>
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Matchly. All rights reserved.
+        © {new Date().getFullYear()} Nearfix. All rights reserved.
       </div>
     </footer>
   );

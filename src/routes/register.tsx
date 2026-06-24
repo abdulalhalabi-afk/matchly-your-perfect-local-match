@@ -25,11 +25,11 @@ import { MATCHLY_API_BASE } from "@/lib/matchly-api";
 export const Route = createFileRoute("/register")({
   head: () => ({
     meta: [
-      { title: "Als Serviceanbieter registrieren — Matchly" },
+      { title: "Als Serviceanbieter registrieren — Nearfix" },
       {
         name: "description",
         content:
-          "Registriere dich als Serviceanbieter bei Matchly und erreiche Familien, die genau deinen Service suchen.",
+          "Registriere dich als Serviceanbieter bei Nearfix und erreiche Familien, die genau deinen Service suchen.",
       },
     ],
   }),
@@ -108,7 +108,7 @@ function RegisterPage() {
             <span className="grid h-7 w-7 place-items-center rounded-lg bg-[var(--gradient-primary)] text-primary-foreground">
               <Sparkles className="h-3.5 w-3.5" />
             </span>
-            Matchly
+            Nearfix
           </span>
         </div>
       </header>
@@ -122,7 +122,7 @@ function RegisterPage() {
           <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
             Werde Teil von{" "}
             <span className="bg-[var(--gradient-primary)] bg-clip-text text-transparent">
-              Matchly
+              Nearfix
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-md text-muted-foreground">
