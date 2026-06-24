@@ -281,32 +281,17 @@ function SearchResults({
 }
 
 function Problem() {
+  const { t } = useI18n();
   const items = [
-    {
-      icon: Layers,
-      title: "Too many options",
-      text: "Endless lists of providers leave you scrolling instead of deciding.",
-    },
-    {
-      icon: Target,
-      title: "Generic results",
-      text: "Popularity rankings don't know your home, your budget, or your kids.",
-    },
-    {
-      icon: UserCheck,
-      title: "No personal fit",
-      text: "The 5-star pro nearby might still be wrong for what you actually need.",
-    },
+    { icon: Layers, title: t("problem.1.title"), text: t("problem.1.text") },
+    { icon: Target, title: t("problem.2.title"), text: t("problem.2.text") },
+    { icon: UserCheck, title: t("problem.3.title"), text: t("problem.3.text") },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-24">
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Finding the right local service is broken.
-        </h2>
-        <p className="mt-4 text-muted-foreground">
-          We've all been there — ten tabs open, still no idea who to call.
-        </p>
+        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("problem.title")}</h2>
+        <p className="mt-4 text-muted-foreground">{t("problem.subtitle")}</p>
       </div>
       <div className="mt-14 grid gap-6 md:grid-cols-3">
         {items.map(({ icon: Icon, title, text }) => (
@@ -327,33 +312,20 @@ function Problem() {
 }
 
 function HowItWorks() {
+  const { t } = useI18n();
   const steps = [
-    {
-      n: "01",
-      title: "Tell us what you need",
-      text: "Pick a service and your location — that's it to get started.",
-    },
-    {
-      n: "02",
-      title: "Answer 3 quick questions",
-      text: "Budget, timing, priorities. Less than a minute, no account needed.",
-    },
-    {
-      n: "03",
-      title: "Get your personal top 3",
-      text: "A curated shortlist matched to your family — not a random directory.",
-    },
+    { n: "01", title: t("how.1.title"), text: t("how.1.text") },
+    { n: "02", title: t("how.2.title"), text: t("how.2.text") },
+    { n: "03", title: t("how.3.title"), text: t("how.3.text") },
   ];
   return (
     <section id="how" className="border-y border-border bg-muted/40 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-            How it works
+            {t("how.label")}
           </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-            Three steps to your perfect match.
-          </h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">{t("how.title")}</h2>
         </div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
@@ -378,6 +350,7 @@ function HowItWorks() {
 type Priority = "price" | "reviews" | "fast";
 
 function Demo() {
+  const { t } = useI18n();
   const [city, setCity] = useState("Brussels");
   const [service, setService] = useState("Plumber");
   const [prios, setPrios] = useState<Priority[]>(["reviews"]);
@@ -411,32 +384,28 @@ function Demo() {
     <section id="demo" className="mx-auto max-w-6xl px-6 py-24">
       <div className="mx-auto max-w-2xl text-center">
         <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-          Live demo
+          {t("demo.label")}
         </span>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-          See your match in seconds.
-        </h2>
-        <p className="mt-4 text-muted-foreground">
-          Try the AI agent below — no signup required.
-        </p>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">{t("demo.title")}</h2>
+        <p className="mt-4 text-muted-foreground">{t("demo.subtitle")}</p>
       </div>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-5">
         <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:col-span-2">
           <div className="mb-5 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <MessageSquare className="h-4 w-4 text-primary" />
-            Nearfix assistant
+            {t("demo.assistant")}
           </div>
 
           <div className="space-y-4">
             <div className="rounded-xl bg-muted px-4 py-3 text-sm">
-              Looking for a{" "}
+              {t("demo.lookingFor")}{" "}
               <Input
                 value={service}
                 onChange={(e) => setService(e.target.value)}
                 className="mx-1 inline-block h-7 w-28 border-0 border-b border-primary/40 bg-transparent px-1 text-sm shadow-none focus-visible:ring-0"
               />
-              in{" "}
+              {t("demo.in")}{" "}
               <Input
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
@@ -445,12 +414,12 @@ function Demo() {
             </div>
 
             <div className="rounded-xl bg-muted px-4 py-3 text-sm">
-              <p className="mb-3 font-medium">Your priorities:</p>
+              <p className="mb-3 font-medium">{t("demo.priorities")}</p>
               <div className="flex flex-wrap gap-2">
                 {([
-                  { id: "price", label: "Best price" },
-                  { id: "reviews", label: "Top reviews" },
-                  { id: "fast", label: "Fastest available" },
+                  { id: "price", label: t("demo.price") },
+                  { id: "reviews", label: t("demo.reviews") },
+                  { id: "fast", label: t("demo.fast") },
                 ] as { id: Priority; label: string }[]).map((p) => {
                   const active = prios.includes(p.id);
                   return (
@@ -472,12 +441,8 @@ function Demo() {
               </div>
             </div>
 
-            <Button
-              onClick={() => setSubmitted(true)}
-              className="w-full rounded-xl"
-              size="lg"
-            >
-              Generate my matches
+            <Button onClick={() => setSubmitted(true)} className="w-full rounded-xl" size="lg">
+              {t("demo.generate")}
               <Sparkles className="ml-1 h-4 w-4" />
             </Button>
           </div>
@@ -487,8 +452,11 @@ function Demo() {
           <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
             <Sparkles className="h-4 w-4 text-primary" />
             {submitted
-              ? `Top 3 ${service.toLowerCase() || "providers"} for you in ${city || "your city"}`
-              : "Your personalized matches will appear here"}
+              ? t("demo.topFor", {
+                  service: service.toLowerCase() || "providers",
+                  city: city || "your city",
+                })
+              : t("demo.placeholder")}
           </div>
           <div className="space-y-3">
             {providers.map((p, i) => (
@@ -505,18 +473,18 @@ function Demo() {
                       <h3 className="font-semibold">{p.name}</h3>
                       {i === 0 && (
                         <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
-                          Best fit
+                          {t("demo.bestFit")}
                         </span>
                       )}
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">{p.blurb}</p>
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      {p.tags.map((t) => (
+                      {p.tags.map((tag) => (
                         <span
-                          key={t}
+                          key={tag}
                           className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
                         >
-                          {t}
+                          {tag}
                         </span>
                       ))}
                     </div>
@@ -524,7 +492,7 @@ function Demo() {
                   <div className="shrink-0 text-right">
                     <div className="text-2xl font-bold text-primary">{p.score}%</div>
                     <div className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                      match
+                      {t("demo.match")}
                     </div>
                   </div>
                 </div>
@@ -538,24 +506,23 @@ function Demo() {
 }
 
 function UseCases() {
+  const { t } = useI18n();
   const cases = [
-    { icon: Wrench, label: "Plumber" },
-    { icon: Sparkle, label: "House cleaning" },
-    { icon: Zap, label: "Electrician" },
-    { icon: Baby, label: "Babysitter" },
-    { icon: GraduationCap, label: "Tutor" },
-    { icon: Hammer, label: "Handyman" },
+    { icon: Wrench, label: t("uc.plumber") },
+    { icon: Sparkle, label: t("uc.cleaning") },
+    { icon: Zap, label: t("uc.electrician") },
+    { icon: Baby, label: t("uc.babysitter") },
+    { icon: GraduationCap, label: t("uc.tutor") },
+    { icon: Hammer, label: t("uc.handyman") },
   ];
   return (
     <section id="use-cases" className="border-t border-border bg-muted/40 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-            Use cases
+            {t("uc.label")}
           </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-            Built for the services families actually need.
-          </h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">{t("uc.title")}</h2>
         </div>
         <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {cases.map(({ icon: Icon, label }) => (
@@ -576,31 +543,43 @@ function UseCases() {
 }
 
 function Waitlist() {
+  const { t } = useI18n();
+  const sendEmail = useServerFn(sendWelcomeEmail);
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
   return (
     <section id="waitlist" className="px-6 py-24">
       <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-border bg-foreground p-10 text-center text-background shadow-[var(--shadow-elegant)] md:p-16">
         <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 text-xs font-medium">
           <Star className="h-3.5 w-3.5" />
-          Limited beta
+          {t("wait.badge")}
         </div>
-        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Be the first to try Nearfix.
-        </h2>
-        <p className="mt-3 text-background/70">
-          Join the waitlist — we're rolling out city by city.
-        </p>
+        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("wait.title")}</h2>
+        <p className="mt-3 text-background/70">{t("wait.subtitle")}</p>
 
         {done ? (
           <div className="mx-auto mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground">
-            <Check className="h-4 w-4" /> You're on the list. Welcome aboard.
+            <Check className="h-4 w-4" /> {t("wait.done")}
           </div>
         ) : (
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              if (email.includes("@")) setDone(true);
+              if (!email.includes("@") || submitting) return;
+              setSubmitting(true);
+              setErr(null);
+              try {
+                await sendEmail({ data: { email } });
+                setDone(true);
+              } catch (e2) {
+                console.error(e2);
+                setErr(t("wait.error"));
+              } finally {
+                setSubmitting(false);
+              }
             }}
             className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
           >
@@ -609,13 +588,18 @@ function Waitlist() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@email.com"
+              placeholder={t("wait.placeholder")}
               className="h-12 rounded-xl border-background/20 bg-background/10 text-background placeholder:text-background/50 focus-visible:ring-primary"
             />
-            <Button type="submit" size="lg" className="h-12 rounded-xl px-6">
-              Join waitlist
+            <Button type="submit" size="lg" disabled={submitting} className="h-12 rounded-xl px-6">
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t("wait.cta")}
             </Button>
           </form>
+        )}
+        {err && (
+          <p className="mt-4 text-sm text-red-300" role="alert">
+            {err}
+          </p>
         )}
       </div>
     </section>
@@ -623,6 +607,8 @@ function Waitlist() {
 }
 
 function ProviderCta() {
+  const { t } = useI18n();
+  const bullets = [t("prov.b1"), t("prov.b2"), t("prov.b3")];
   return (
     <section id="providers" className="border-t border-border bg-background py-24">
       <div className="mx-auto max-w-5xl px-6">
@@ -636,38 +622,31 @@ function ProviderCta() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                Für Profis
+                {t("prov.badge")}
               </span>
               <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                Bist du Serviceanbieter?
+                {t("prov.title")}
               </h2>
-              <p className="mt-4 max-w-md text-muted-foreground">
-                Werde Teil von Nearfix und erreiche Familien, die genau deinen
-                Service suchen — kostenlos und unverbindlich.
-              </p>
+              <p className="mt-4 max-w-md text-muted-foreground">{t("prov.text")}</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button asChild size="lg" className="rounded-xl">
                   <Link to="/register">
-                    Jetzt registrieren
+                    {t("prov.cta")}
                     <ArrowRight className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
               </div>
             </div>
             <ul className="space-y-3 text-sm">
-              {[
-                "Passende Anfragen aus deiner Region",
-                "Kein Provisionsmodell — du behältst alles",
-                "Eintrag in unter 2 Minuten",
-              ].map((t) => (
+              {bullets.map((b) => (
                 <li
-                  key={t}
+                  key={b}
                   className="flex items-start gap-3 rounded-xl border border-border bg-card/80 p-4 backdrop-blur"
                 >
                   <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
                     <Check className="h-3 w-3" />
                   </span>
-                  <span className="text-foreground">{t}</span>
+                  <span className="text-foreground">{b}</span>
                 </li>
               ))}
             </ul>
@@ -679,25 +658,26 @@ function ProviderCta() {
 }
 
 function Footer() {
-
+  const { t } = useI18n();
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
         <Logo />
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
-          <a href="#how" className="hover:text-foreground">How it works</a>
-          <a href="#use-cases" className="hover:text-foreground">Use cases</a>
-          <a href="#waitlist" className="hover:text-foreground">Waitlist</a>
+          <a href="#how" className="hover:text-foreground">{t("nav.how")}</a>
+          <a href="#use-cases" className="hover:text-foreground">{t("nav.useCases")}</a>
+          <a href="#waitlist" className="hover:text-foreground">{t("nav.waitlist")}</a>
         </nav>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
           <Sparkles className="h-3 w-3 text-primary" />
-          Built with AI
+          {t("footer.builtAi")}
         </span>
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Nearfix. All rights reserved.
+        © {new Date().getFullYear()} Nearfix. {t("footer.rights")}
       </div>
     </footer>
+
   );
 }
 
