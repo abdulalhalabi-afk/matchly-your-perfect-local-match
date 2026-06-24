@@ -59,10 +59,8 @@ function CrmPage() {
   const [contacts, setContacts] = useState<ApiContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const ctrl = new AbortController();
     setLoading(true);
     setError(null);
@@ -75,9 +73,7 @@ function CrmPage() {
     return () => ctrl.abort();
   }, []);
 
-  if (!mounted) {
-    return <div className="min-h-screen bg-background" />;
-  }
+
 
 
   return (
