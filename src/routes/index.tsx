@@ -111,7 +111,7 @@ function Hero({ city, setCity, service, setService, onSearch, loading, providerC
             The best plumber for YOU
           </span>
           {"\n\n"}
-          tThe best plumber for you.
+          The best plumber for you.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
           Our AI agent learns your preferences and finds local services that actually
