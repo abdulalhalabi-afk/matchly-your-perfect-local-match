@@ -10,9 +10,30 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Users, Mail, Phone, ArrowLeft, Loader2, AlertCircle, Plus } from "lucide-react";
+import {
+  Users,
+  Mail,
+  Phone,
+  ArrowLeft,
+  Loader2,
+  AlertCircle,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchContacts, primaryService, type ApiContact } from "@/lib/matchly-api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { fetchContacts, primaryService, MATCHLY_API_BASE, type ApiContact } from "@/lib/matchly-api";
+
 
 export const Route = createFileRoute("/crm/")({
   head: () => ({
@@ -59,6 +80,8 @@ function CrmPage() {
   const [contacts, setContacts] = useState<ApiContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<ApiContact | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -72,6 +95,26 @@ function CrmPage() {
       .finally(() => setLoading(false));
     return () => ctrl.abort();
   }, []);
+
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`${MATCHLY_API_BASE}/api/contacts/${pendingDelete.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok && res.status !== 204) throw new Error(`API ${res.status}`);
+      setContacts((cur) => cur.filter((c) => c.id !== pendingDelete.id));
+      toast.success("Kontakt gelöscht");
+      setPendingDelete(null);
+    } catch (e) {
+      console.error(e);
+      toast.error("Löschen fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
 
 
 
@@ -144,8 +187,10 @@ function CrmPage() {
                     <TableHead className="px-6 py-4 font-medium text-foreground">Kontakt</TableHead>
                     <TableHead className="px-6 py-4 font-medium text-foreground">Service</TableHead>
                     <TableHead className="px-6 py-4 font-medium text-foreground">Status</TableHead>
+                    <TableHead className="w-[60px] px-6 py-4" />
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {contacts.map((contact) => (
                     <TableRow key={contact.id} className="group">
@@ -183,7 +228,19 @@ function CrmPage() {
                       <TableCell className="px-6 py-4">
                         <StatusBadge active={contact.status === "active"} />
                       </TableCell>
+                      <TableCell className="px-2 py-4 text-right">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`${contact.firstName} ${contact.lastName} löschen`}
+                          onClick={() => setPendingDelete(contact)}
+                          className="h-8 w-8 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
+
                   ))}
                 </TableBody>
               </Table>
@@ -191,6 +248,38 @@ function CrmPage() {
           </CardContent>
         </Card>
       </main>
+
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open && !deleting) setPendingDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Kontakt wirklich löschen?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete
+                ? `"${pendingDelete.firstName} ${pendingDelete.lastName}" wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.`
+                : ""}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void handleDelete();
+              }}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Löschen"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
+
 }
